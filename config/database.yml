@@ -5,14 +5,17 @@ default: &default
 
 development:
   <<: *default
+  database: <%= ENV['DATABASE_NAME'] %>
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
   port: <%= ENV['DATABASE_PORT'] || '5432' %>
 
 test:
   <<: *default
+  database: <%= ENV['DATABASE_NAME'] %>
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
+  port: <%= ENV['DATABASE_PORT'] || '5432' %>
 
 production:
   <<: *default
