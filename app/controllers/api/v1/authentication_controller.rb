@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AuthenticationController < ApplicationController
+class Api::V1::AuthenticationController < ApplicationController
   include JsonWebToken
 
   skip_before_action :authenticate_user
