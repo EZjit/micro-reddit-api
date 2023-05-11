@@ -6,8 +6,8 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users
   def index
-    @users = User.all
-    render json: @users, status: 200
+    @pagy, @records = pagy(User.all)
+    render json: @records, status: 200
   end
 
   # GET api/v1/users/{username}

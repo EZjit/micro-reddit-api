@@ -11,6 +11,7 @@
 #  password_digest :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  is_admin        :boolean          default(FALSE)
 #
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :username, :email, :name, :recently_joined?

@@ -8,8 +8,8 @@ class Api::V1::CommentsController < ApplicationController
 
   # GET /api/v1/communities/{community_name}/posts/{post_id}
   def index
-    @comments = @post.comments
-    render json: @comments, status: 200
+    @pagy, @records = pagy(@post.comments)
+    render json: @records, status: 200
   end
 
   # GET /api/v1/communities/{community_name}/posts/{post_id}/{comment_id}

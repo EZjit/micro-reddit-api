@@ -11,10 +11,13 @@
 #  password_digest :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  is_admin        :boolean          default(FALSE)
 #
 class User < ApplicationRecord
+  has_many :posts
+  has_many :comments
+
   PASSWORD_FORMAT = /\A
-  (?=.{6,})          # Must contain 6 or more characters
   (?=.*\d)           # Must contain a digit
   (?=.*[a-z])        # Must contain a lower case character
   (?=.*[A-Z])        # Must contain an upper case character

@@ -10,15 +10,3 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
-
-one:
-  title: MyString
-  body: MyString
-  user: one
-  community: one
-
-two:
-  title: MyString
-  body: MyString
-  user: two
-  community: two

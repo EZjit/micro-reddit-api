@@ -41,6 +41,8 @@ group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem 'dotenv-rails'
   gem 'rubocop'
+  gem 'rspec-rails', '~> 6.0.0'
+  gem 'factory_bot_rails'
 end
 
 group :development do
@@ -48,6 +50,14 @@ group :development do
   # gem "spring"
   gem 'annotate'
 end
+
+group :test do
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # gem "spring"
+  gem 'database_cleaner-active_record'
+  gem 'shoulda-matchers'
+end
+
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'bcrypt'

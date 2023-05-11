@@ -8,8 +8,8 @@ class Api::V1::PostsController < ApplicationController
 
   # GET /api/v1/communities/{community_name}/posts
   def index
-    @posts = @community.posts
-    render json: @posts, status: 200
+    @pagy, @records = pagy(@community.posts)
+    render json: @records, status: 200
   end
 
   # GET /api/v1/communities/{community_name}/posts/{post_id}

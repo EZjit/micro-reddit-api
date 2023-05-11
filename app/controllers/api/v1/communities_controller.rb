@@ -7,8 +7,8 @@ class Api::V1::CommunitiesController < ApplicationController
 
   # GET /api/v1/communities
   def index
-    @communities = Community.all
-    render json: @communities, status: 200
+    @pagy, @records = pagy(Community.all)
+    render json: @records, status: 200
   end
 
   # GET /api/v1/communities/{community_name}
