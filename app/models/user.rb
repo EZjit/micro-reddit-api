@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -19,7 +21,6 @@ class User < ApplicationRecord
   (?=.*[[:^alnum:]]) # Must contain a symbol
 /x
 
-
   has_secure_password
 
   validates :username, presence: true, uniqueness: true, length: { within: 2..25 }
@@ -29,12 +30,9 @@ class User < ApplicationRecord
             presence: true,
             length: { within: 6..20 },
             format: { with: PASSWORD_FORMAT },
-            confirmation: true,
-            on: :create
-  validates :password,
-            presence: true,
-            length: { within: 6..20 },
-            format: { with: PASSWORD_FORMAT },
-            confirmation: true,
-            on: :update
+            confirmation: true
+
+  def admin?
+    is_admin == true
+  end
 end

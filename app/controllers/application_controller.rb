@@ -19,4 +19,12 @@ class ApplicationController < ActionController::API
       render json: { errors: e.message }, status: 401
     end
   end
+
+  def authorize_admin
+    render json: { message: 'Admin only, not authorized!' }, status: 401 unless authenticate_user.admin?
+  end
+
+  def author?(object)
+    render json: { message: 'Author only, not authorized!' }, status: 401 unless authenticate_user == object.user
+  end
 end

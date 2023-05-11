@@ -5,6 +5,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, param: :_username
       post '/auth/login', to: 'authentication#login'
+      resources :communities, param: :_name do
+        resources :posts do
+          resources :comments
+        end
+      end
     end
   end
 end

@@ -4,18 +4,18 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user, except: :create
   before_action :set_user, except: %i[create index]
 
-  # GET /users
+  # GET /api/v1/users
   def index
     @users = User.all
     render json: @users, status: 200
   end
 
-  # GET /users/{username}
+  # GET api/v1/users/{username}
   def show
     render json: @user, status: 200
   end
 
-  # POST /users
+  # POST api/v1/users
   def create
     @user = User.new(user_params)
     if @user.save
@@ -25,16 +25,16 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  # PUT /users/{username}
+  # PUT api/v1/users/{username}
   def update
-    unless @user.update(user_params)
-      render json: { errors: @user.errors.full_messages }, status: 422
-    end
+    render json: { errors: @user.errors.full_messages }, status: 422 unless @user&.update(user_params)
+    render json: @user
   end
 
-  # DELETE /users/{username}
+  # DELETE api/v1/users/{username}
   def destroy
-    @user.destroy
+    render json: { errors: @user.errors.full_messages }, status: 422 unless @user&.destroy
+    render json: { notice: 'User was successfully deleted' }
   end
 
   private
