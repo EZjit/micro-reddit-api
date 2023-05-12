@@ -6,12 +6,13 @@
 #
 #  id              :bigint           not null, primary key
 #  name            :string
-#  username        :string
-#  email           :string
-#  password_digest :string
+#  username        :string           not null
+#  email           :string           not null
+#  password_digest :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  is_admin        :boolean          default(FALSE)
+#
 
 require 'rails_helper'
 
@@ -19,15 +20,13 @@ RSpec.describe User, type: :model do
   describe 'validations' do
     describe 'username field' do
       it { should validate_presence_of(:username) }
-      it { should validate_uniqueness_of(:username) }
       it { should validate_length_of(:username) }
     end
 
     describe 'email field' do
       it { should validate_presence_of(:email) }
-      it { should validate_uniqueness_of(:email) }
-      it { should allow_value('aaa@bbb.com').for(:email) } # valid password
-      it { should_not allow_value('aaaaaa').for(:email) } # invalid password
+      it { should allow_value('aaa@bbb.com').for(:email) } # valid email
+      it { should_not allow_value('aaaaaa').for(:email) } # invalid email
     end
 
     describe 'password field' do
@@ -40,6 +39,12 @@ RSpec.describe User, type: :model do
       it { should_not allow_value('231ASDA$').for(:password) } # must contain a lowercase char
       it { should_not allow_value('314dasd$').for(:password) } # must contain a uppercase char
       it { should_not allow_value('313Dads').for(:password) } # must contain a symbol
+    end
+
+    describe 'uniqueness constraints' do
+      subject { build(:user) }
+      it { should validate_uniqueness_of(:username) }
+      it { should validate_uniqueness_of(:email) }
     end
   end
 end

@@ -3,8 +3,8 @@
 # Table name: communities
 #
 #  id          :bigint           not null, primary key
-#  name        :string
-#  description :string
+#  name        :string           not null
+#  description :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

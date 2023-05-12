@@ -3,7 +3,7 @@
 # Table name: comments
 #
 #  id         :bigint           not null, primary key
-#  body       :string
+#  body       :string           not null
 #  post_id    :bigint           not null
 #  user_id    :bigint           not null
 #  parent_id  :bigint
