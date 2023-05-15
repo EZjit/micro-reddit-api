@@ -17,7 +17,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'validations' do
+  context 'validations' do
     describe 'username field' do
       it { should validate_presence_of(:username) }
       it { should validate_length_of(:username) }
@@ -50,12 +50,12 @@ RSpec.describe User, type: :model do
 end
 
 RSpec.describe User, type: :model do
-  describe 'associations' do
+  context 'associations' do
     it { should have_many(:posts) }
     it { should have_many(:comments) }
   end
 
-  describe 'admin? method' do
+  context 'admin? method' do
     context 'admin user' do
       subject { build(:user, is_admin: true) }
       it 'should return true' do

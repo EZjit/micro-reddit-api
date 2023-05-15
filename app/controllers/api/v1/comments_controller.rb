@@ -2,7 +2,6 @@
 
 class Api::V1::CommentsController < ApplicationController
   before_action :set_post
-  before_action :authenticate_user
   before_action :ensure_authorship, only: %i[update delete]
   before_action :set_comment, except: %i[create index]
 

@@ -14,9 +14,5 @@
 #  is_admin        :boolean          default(FALSE)
 #
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :username, :email, :name, :recently_joined?
-
-  def recently_joined?
-    Date.today.prev_month < object.created_at
-  end
+  attributes :id, :username, :email, :name
 end

@@ -2,7 +2,6 @@
 
 class Api::V1::PostsController < ApplicationController
   before_action :set_community
-  before_action :authenticate_user
   before_action :ensure_authorship, only: %i[update delete]
   before_action :set_post, except: %i[create index]
 

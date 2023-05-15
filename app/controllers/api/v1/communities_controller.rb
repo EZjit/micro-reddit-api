@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Api::V1::CommunitiesController < ApplicationController
-  before_action :authenticate_user
   before_action :authorize_admin, only: %i[update destroy]
   before_action :set_community, except: %i[create index]
 
@@ -45,7 +44,7 @@ class Api::V1::CommunitiesController < ApplicationController
   end
 
   def set_community
-    @community = Community.find(params[:_name])
+    @community = Community.find(params[:name])
   rescue ActiveRecord::RecordNotFound
     render json: { errors: 'Community not found' }, status: 404
   end

@@ -14,7 +14,7 @@
 require 'rails_helper'
 
 RSpec.describe Community, type: :model do
-  describe 'validations' do
+  context 'validations' do
     describe 'name field' do
       it { should validate_presence_of(:name) }
       it { should validate_length_of(:name) }
@@ -23,13 +23,12 @@ RSpec.describe Community, type: :model do
         it { should validate_uniqueness_of(:name) }
       end
     end
-
     describe 'description field' do
       it { should validate_presence_of(:name) }
     end
   end
 
-  describe 'associations' do
+  context 'associations' do
     it { should have_many(:posts).dependent(:destroy) }
   end
 end
