@@ -18,9 +18,9 @@ RSpec.describe Api::V1::AuthenticationController, type: :controller do
 end
 
 RSpec.describe Api::V1::AuthenticationController, type: :controller do
-  before { create(:user) }
+  let(:user) { create(:user) }
   context 'valid email and password' do
-    let(:valid_creds) { { email: 'test@example.com', password: '0oK9Ij*uh' } }
+    let(:valid_creds) { { email: user.email, password: user.password } }
     before { post :login, params: valid_creds }
     it { should respond_with(:ok) }
     it 'should contain token' do

@@ -45,7 +45,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def set_community
-    @community = Community.find(param[:community_id])
+    @community = Community.find(param[:community__name])
   end
 
   def set_post

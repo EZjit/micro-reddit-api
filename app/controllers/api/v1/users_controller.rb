@@ -3,7 +3,7 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_user, only: :create
   before_action :set_user, except: %i[create index]
-  before_action :correct_user, only: %i[edit update destroy]
+  before_action :correct_user, only: %i[update destroy]
 
   # GET /api/v1/users
   def index
@@ -29,7 +29,7 @@ class Api::V1::UsersController < ApplicationController
   # PUT api/v1/users/{username}
   def update
     if @user&.update(user_params)
-      render json: @user, serializer: UserSerializer
+      render json: @user, status: 200, serializer: UserSerializer
     else
       render json: { errors: @user.errors.full_messages }, status: 422
     end
@@ -48,7 +48,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def set_user
-    @user = User.find_by_username!(params[:username])
+    @user = User.find_by_username!(params[:_username])
   rescue ActiveRecord::RecordNotFound
     render json: { errors: 'User not found' }, status: 404
   end

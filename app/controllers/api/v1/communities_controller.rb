@@ -44,7 +44,7 @@ class Api::V1::CommunitiesController < ApplicationController
   end
 
   def set_community
-    @community = Community.find(params[:name])
+    @community = Community.find(params[:_name])
   rescue ActiveRecord::RecordNotFound
     render json: { errors: 'Community not found' }, status: 404
   end

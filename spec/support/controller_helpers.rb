@@ -8,4 +8,8 @@ module ControllerHelpers
                        Rails.application.secrets.secret_key_base.to_s)
     request.headers['Authorization'] = token
   end
+
+  def json_body
+    JSON.parse(response.body)
+  end
 end
