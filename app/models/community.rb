@@ -12,6 +12,6 @@
 #
 class Community < ApplicationRecord
   has_many :posts, dependent: :destroy
-  validates :name, presence: true, uniqueness: true, length: { within: 3..25 }
+  validates :name, presence: true, uniqueness: true, length: { within: 3..25 }, one_word: true
   validates :description, presence: true
 end
