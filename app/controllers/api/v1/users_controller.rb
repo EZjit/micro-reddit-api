@@ -3,7 +3,7 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_user, only: :create
   before_action :set_user, except: %i[create index]
-  before_action :correct_user, only: %i[update destroy]
+  before_action :ensure_account_ownership, only: %i[update destroy]
 
   # GET /api/v1/users
   def index
@@ -13,12 +13,12 @@ class Api::V1::UsersController < ApplicationController
 
   # GET api/v1/users/{username}
   def show
-    render json: @user, status: 200, serializer: UserSerializer
+    render json: @user, status: 200, serializer: UserSerializer if @user
   end
 
   # POST api/v1/users
   def create
-    @user = User.new(user_params)
+    @user = User.new(user_params_for_create)
     if @user.save
       render json: @user, status: 201, serializer: UserSerializer
     else
@@ -26,9 +26,9 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  # PUT api/v1/users/{username}
+  # PATCH api/v1/users/{username}
   def update
-    if @user&.update(user_params)
+    if @user.update(user_params_for_update)
       render json: @user, status: 200, serializer: UserSerializer
     else
       render json: { errors: @user.errors.full_messages }, status: 422
@@ -43,17 +43,20 @@ class Api::V1::UsersController < ApplicationController
 
   private
 
-  def user_params
-    params.permit(%i[name username email password password_confirmation])
+  def user_params_for_create
+    params.require(:user).permit(%i[name username email password password_confirmation])
   end
+
+  def user_params_for_update
+    params.require(:user).permit(:name)
+  end
+
 
   def set_user
-    @user = User.find_by_username!(params[:_username])
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'User not found' }, status: 404
+    @user = User.find_by_username(params[:_username]) or not_found('user')
   end
 
-  def correct_user
+  def ensure_account_ownership
     render json: { errors: 'You are not allowed to do this' }, status: 401 unless authenticate_user == set_user
   end
 end

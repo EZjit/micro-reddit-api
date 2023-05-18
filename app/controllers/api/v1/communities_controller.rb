@@ -7,19 +7,19 @@ class Api::V1::CommunitiesController < ApplicationController
   # GET /api/v1/communities
   def index
     @pagy, @records = pagy(Community.all)
-    render json: @records, status: 200
+    render json: @records, status: 200, each_serializer: CommunitySerializer, include: ['posts']
   end
 
   # GET /api/v1/communities/{community_name}
   def show
-    render json: @community, status: 200
+    render json: @community, status: 200, serializer: CommunitySerializer, include: ['posts']
   end
 
   # POST /api/v1/communities
   def create
-    @community = Community.new(community_params)
+    @community = Community.new(community_params_for_create)
     if @community.save
-      render json: @community, status: 201
+      render json: @community, status: 201, serializer: CommunitySerializer
     else
       render json: { errors: @community.errors.full_messages }, status: 422
     end
@@ -27,25 +27,30 @@ class Api::V1::CommunitiesController < ApplicationController
 
   # PUT api/v1/communities/{community_name}
   def update
-    render json: { errors: @community.errors.full_messages }, status: 422 unless @community&.update(community_params)
-    render json: @community
+    if @community&.update(community_params_for_update)
+      render json: @community, status: 200, serializer: CommunitySerializer, include: ['posts']
+    else
+      render json: { errors: @community.errors.full_messages }, status: 422
+    end
   end
 
   # DELETE api/v1/communities/{community_name}
   def destroy
-    render json: { errors: @community.errors.full_messages }, status: 422 unless @community&.destroy
-    render json: { notice: 'Community was successfully deleted' }
+    @community.destroy
+    head :no_content
   end
 
   private
 
-  def community_params
-    params.permit(%i[name description])
+  def community_params_for_create
+    params.require(:community).permit(%i[name description])
+  end
+
+  def community_params_for_update
+    params.require(:community).permit(:description)
   end
 
   def set_community
-    @community = Community.find(params[:_name])
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'Community not found' }, status: 404
+    @community = Community.find_by_name(params[:_name]) or not_found('community')
   end
 end

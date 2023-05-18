@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :community do
-    name { 'Community name' }
+    sequence(:name) { |i| "Community#{i}" }
     description { 'Description' }
   end
 end

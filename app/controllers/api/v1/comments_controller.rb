@@ -41,17 +41,15 @@ class Api::V1::CommentsController < ApplicationController
   private
 
   def comment_params
-    params.permit(:body, :parent)
+    params.require(:comment).permit(:body, :parent)
   end
 
   def set_post
-    @post = Post.find(params[:post_id])
+    @post = Post.find(params[:post_id]) or not_found('post')
   end
 
   def set_comment
-    @comment = Comment.comment(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'Comment not found' }, status: 404
+    @comment = Comment.comment(params[:id]) or not_found('comment')
   end
 
   def ensure_authorship

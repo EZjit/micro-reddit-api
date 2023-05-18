@@ -3,5 +3,8 @@
 FactoryBot.define do
   factory :comment do
     body { 'Body' }
+    user
+    association :post
+    parent { nil }
   end
 end

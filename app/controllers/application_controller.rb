@@ -23,10 +23,14 @@ class ApplicationController < ActionController::API
   end
 
   def authorize_admin
-    render json: { message: 'Admin only, not authorized!' }, status: 401 unless authenticate_user.admin?
+    render json: { errors: 'Admin-only functionality' }, status: 401 unless authenticate_user.admin?
   end
 
   def author?(object)
-    render json: { message: 'Author only, not authorized!' }, status: 401 unless authenticate_user == object.user
+    render json: { errors: 'You are not allowed to do this' }, status: 401 unless authenticate_user == object.user
+  end
+
+  def not_found(object_class_name)
+    render json: { errors: "#{object_class_name.capitalize} not found" }, status: 404
   end
 end

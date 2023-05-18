@@ -21,6 +21,8 @@ RSpec.describe User, type: :model do
     describe 'username field' do
       it { should validate_presence_of(:username) }
       it { should validate_length_of(:username) }
+      it { should allow_value('JohnDoe').for(:username) } # one-word username
+      it { should_not allow_value('John Doe').for(:username) } # value with 1+ words
     end
 
     describe 'email field' do

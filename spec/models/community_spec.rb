@@ -18,6 +18,8 @@ RSpec.describe Community, type: :model do
     describe 'name field' do
       it { should validate_presence_of(:name) }
       it { should validate_length_of(:name) }
+      it { should allow_value('CommunityName').for(:name) } # valid one-word name
+      it { should_not allow_value('Community Name').for(:name) } # not valid 1+ word name
       describe 'uniqueness constraint' do
         subject { build(:community) }
         it { should validate_uniqueness_of(:name) }

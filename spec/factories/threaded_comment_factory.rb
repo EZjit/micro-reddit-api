@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :post do
-    title { 'Title' }
+  factory :comment do
     body { 'Body' }
     user
-    community
+    association :post
+    parent
   end
 end

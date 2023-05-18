@@ -33,7 +33,9 @@ class User < ApplicationRecord
             presence: true,
             length: { within: 6..20 },
             format: { with: PASSWORD_FORMAT },
-            confirmation: true
+            confirmation: true,
+            on: :create
+  validates :password_confirmation, presence: true, on: :create
 
   def admin?
     is_admin == true
