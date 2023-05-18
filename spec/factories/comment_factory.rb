@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :comment do
     body { 'Body' }
-    user
+    association :user
     association :post
     parent { nil }
   end

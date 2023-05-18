@@ -14,7 +14,7 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
   let!(:admin) { create(:user, is_admin: true) }
   let!(:user) { create(:user) }
 
-  describe 'unauthorized user does not have access to any action' do
+  describe 'unauthenticated user does not have access to any action' do
     context '#index' do
       before { get :index }
       it { should respond_with(:unauthorized) }
@@ -29,19 +29,19 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
     end
     context '#update' do
       before do
-        get :update, params: {
+        patch :update, params: {
           _name: community.name, community: { name: 'name', description: 'description' }
         }
       end
       it { should respond_with(:unauthorized) }
     end
     context '#destroy' do
-      before { get :destroy, params: { _name: community.name } }
+      before { delete :destroy, params: { _name: community.name } }
       it { should respond_with(:unauthorized) }
     end
   end
 
-  describe 'authorized user' do
+  describe 'authenticated user' do
     before { get_auth_token(user) }
     describe 'GET #index' do
       before { get :index }
@@ -100,7 +100,7 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
       let(:invalid_attributes) { { community: { description: nil } } }
 
       context 'not admin user trying to update community info' do
-        before { get :update, params: { _name: community.name }.merge(valid_attributes) }
+        before { patch :update, params: { _name: community.name }.merge(valid_attributes) }
         it { should respond_with(:unauthorized) }
         it 'should return a JSON with an error' do
           expect(json_body['errors']).to eq('Admin-only functionality')
@@ -110,7 +110,7 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
       context 'admin user' do
         before { get_auth_token(admin) }
         context 'community with #name exists' do
-          before { get :update, params: { _name: community.name }.merge(valid_attributes) }
+          before { patch :update, params: { _name: community.name }.merge(valid_attributes) }
           it { should respond_with(:ok) }
           it 'should return updated community' do
             expect(json_body['description']).to eq(valid_attributes[:community][:description])
@@ -130,7 +130,7 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
         end
 
         context 'invalid attributes' do
-          before { get :update, params: { _name: community.name }.merge(invalid_attributes) }
+          before { patch :update, params: { _name: community.name }.merge(invalid_attributes) }
           it 'does not update a community attributes' do
             community.reload
             expect(community.description).not_to eq(invalid_attributes[:community][:description])
@@ -143,7 +143,7 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
 
     describe 'DELETE #destroy{name}' do
       context 'not admin user trying to delete community' do
-        before { get :destroy, params: { _name: community.name } }
+        before { delete :destroy, params: { _name: community.name } }
         it { should respond_with(:unauthorized) }
         it 'should return a JSON with an error' do
           expect(json_body['errors']).to eq('Admin-only functionality')
@@ -152,7 +152,7 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
       context 'admin user' do
         before { get_auth_token(admin) }
         context 'community with #name exists' do
-          before { get :destroy, params: { _name: community.name } }
+          before { delete :destroy, params: { _name: community.name } }
           it { should respond_with(:no_content) }
           it 'should actually destroy a community' do
             get :show, params: { _name: community.name }
@@ -161,7 +161,7 @@ RSpec.describe Api::V1::CommunitiesController, type: :controller do
         end
 
         context 'community with #name does not exist' do
-          before { get :destroy, params: { _name: 'invalid_name' } }
+          before { delete :destroy, params: { _name: 'invalid_name' } }
           it { should respond_with(:not_found) }
           it 'should return a JSON with an error' do
             expect(json_body['errors']).to eq('Community not found')

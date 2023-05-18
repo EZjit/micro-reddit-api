@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_user, only: :create
   before_action :set_user, except: %i[create index]
+  skip_before_action :authenticate_user, only: :create
   before_action :ensure_account_ownership, only: %i[update destroy]
 
   # GET /api/v1/users
@@ -37,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
 
   # DELETE api/v1/users/{username}
   def destroy
-    @user.destroy
+    @user&.destroy
     head :no_content
   end
 

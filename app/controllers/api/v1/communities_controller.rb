@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::CommunitiesController < ApplicationController
-  before_action :authorize_admin, only: %i[update destroy]
   before_action :set_community, except: %i[create index]
+  before_action :authorize_admin, only: %i[update destroy]
 
   # GET /api/v1/communities
   def index
@@ -36,7 +36,7 @@ class Api::V1::CommunitiesController < ApplicationController
 
   # DELETE api/v1/communities/{community_name}
   def destroy
-    @community.destroy
+    @community&.destroy
     head :no_content
   end
 

@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :post do
-    title { 'Title' }
+    sequence(:title) { |i| "Post number #{i}" }
     body { 'Body' }
-    user
-    community
+    association :user
+    association :community
   end
 end

@@ -72,7 +72,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     before { get_auth_token(user) }
     let(:update_params) { { name: 'John Doe' } }
     context 'user with #username exists' do
-      before { get :update, params: { _username: user.username, user: update_params } }
+      before { patch :update, params: { _username: user.username, user: update_params } }
       it { should respond_with(:ok) }
       it 'should return updated user' do
         expect(json_body['name']).to eq(update_params[:name])
@@ -85,7 +85,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
     context 'user trying to update information of another user' do
       let(:another_user) { create(:user) }
-      before { get :update, params: { _username: another_user.username, user: update_params } }
+      before { patch :update, params: { _username: another_user.username, user: update_params } }
       it { should respond_with(:unauthorized) }
       it 'should return a JSON with an error' do
         expect(json_body['errors']).to eq('You are not allowed to do this')
@@ -96,7 +96,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe 'DELETE #destroy{username}' do
     before { get_auth_token(user) }
     context 'user with #username exists' do
-      before { get :destroy, params: { _username: user.username } }
+      before { delete :destroy, params: { _username: user.username } }
       it { should respond_with(:no_content) }
       it 'should actually destroy a user' do
         another_user = users.last
@@ -108,7 +108,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
     context 'user trying to delete another user profile' do
       let(:another_user) { create(:user) }
-      before { get :destroy, params: { _username: another_user.username } }
+      before { delete :destroy, params: { _username: another_user.username } }
       it { should respond_with(:unauthorized) }
       it 'should return a JSON with an error' do
         expect(json_body['errors']).to eq('You are not allowed to do this')

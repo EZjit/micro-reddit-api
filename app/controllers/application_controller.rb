@@ -27,7 +27,7 @@ class ApplicationController < ActionController::API
   end
 
   def author?(object)
-    render json: { errors: 'You are not allowed to do this' }, status: 401 unless authenticate_user == object.user
+    render json: { errors: 'You are not allowed to do this' }, status: 401 unless authenticate_user == object&.user
   end
 
   def not_found(object_class_name)

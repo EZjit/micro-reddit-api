@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Api::V1::CommentsController < ApplicationController
-  before_action :set_post
-  before_action :ensure_authorship, only: %i[update delete]
+  before_action :set_post, only: %i[index create]
   before_action :set_comment, except: %i[create index]
+  before_action :ensure_authorship, only: %i[update destroy]
 
   # GET /api/v1/communities/{community_name}/posts/{post_id}
   def index
@@ -19,8 +19,10 @@ class Api::V1::CommentsController < ApplicationController
   # POST /api/v1/communities/{community_name}/posts/{post_id}
   def create
     @comment = Comment.new(comment_params)
-    if comment.save
-      render json: @comment, status: 201
+    @comment.user = authenticate_user
+    @comment.post = @post
+    if @comment.save
+      render json: @comment, status: 201, serializer: CommentSerializer
     else
       render json: { errors: @comment.errors.full_messages }, status: 422
     end
@@ -28,14 +30,17 @@ class Api::V1::CommentsController < ApplicationController
 
   # PUT /api/v1/communities/{community_name}/posts/{post_id}/{comment_id}
   def update
-    render json: { errors: @comment.errors.full_messages }, status: 422 unless @comment&.update(comment_params)
-    render json: @comment
+    if @comment&.update(comment_params)
+      render json: @comment, status: 200, serializer: CommentSerializer
+    else
+      render json: { errors: @comment.errors.full_messages }, status: 422
+    end
   end
 
   # DELETE /api/v1/communities/{community_name}/posts/{post_id}/{comment_id}
   def destroy
-    render json: { errors: @comment.errors.full_messages }, status: 422 unless @comment&.destroy
-    render json: { message: 'Comment was successfully deleted' }
+    @comment&.destroy
+    head :no_content
   end
 
   private
@@ -45,11 +50,11 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def set_post
-    @post = Post.find(params[:post_id]) or not_found('post')
+    @post = Post.find_by(id: params[:post_id]) or not_found('post')
   end
 
   def set_comment
-    @comment = Comment.comment(params[:id]) or not_found('comment')
+    @comment = Comment.find_by(id: params[:id]) or not_found('comment')
   end
 
   def ensure_authorship
