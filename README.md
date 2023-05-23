@@ -5,7 +5,7 @@ MICRO-REDDIT API
 Installation:
 1) copy repository
 2) install gems: [bundle install]
-3) create .env file with your PostgreSQL data (database name, username, password and port) and put it inside project directory. !!! Make sure that names of variables inside .env file are the same as those inside rails db config (app-directory/config/datamase.yml) !!!
+3) create .env file with your PostgreSQL data (database name, username, password and port) and put it inside project directory. !!! Make sure that names of variables inside .env file are the same as those inside rails db config (app-directory/config/database.yml) !!!
 4) migrate models: [rails db:migrate]
 5) (optional) seed db with prepared data: [rails db:seed]
 6) start server [rails s]
